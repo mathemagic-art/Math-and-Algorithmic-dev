@@ -18,4 +18,4 @@ Install required packages:
 `pip3 install -r requirements.txt`
 
  
-_Run all commands from project directory (Digital-Campus)_
+_Run all commands from project directory (sci-py-code)_

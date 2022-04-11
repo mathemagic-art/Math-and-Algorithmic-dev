@@ -1,64 +1,42 @@
-import sympy as sp
-import numpy as np
-from random import randint as rd
-x = sp.Symbol('x')
+import random, time
+from sympy import sympify
 
-
-
-
-
-
-
-
-
+operators = ['+', '-', '*', '/']
+addsub = ['+', '-']
+muldiv = ['*', '/']
 
 
 def Diffs():
-    print("hello")
-    pass 
+    x = 'x'
+    coefficient1 = random.randint(-10, 30)
+    coefficient2 = random.randint(-10, 30)
+    coefficient3 = random.randint(-10, 40)
+    coefficient4 = random.randint(-10, 40)
+    coefficient5 = random.randint(-10, 40)
+    power = random.randint(-5, 5)
+
+    monomial = "{}*{}^{}".format(coefficient1, x, power)
+    monomial2 = "({}*({}^{})){}{}".format(coefficient1, x, power,random.choice(muldiv), coefficient2)
+
+    binomial = "{}*({}^{}){}({})".format(coefficient1, x, power, random.choice(addsub), coefficient2)
+    binomial2 = "({}*({}^{}){}({})){}({})".format(coefficient1, x, power, random.choice(addsub), coefficient2, random.choice(muldiv), coefficient2)
 
 
+    trinomial = "{}*{}^{}{}{}*{}^{}{}{}".format(coefficient1, x, power, random.choice(addsub), coefficient2, x, power,
+                                              random.choice(addsub), coefficient3)
+    trinomial2 = "({}*{}^{}{}{}*{}^{}{}{}){}{}*{}^{}{}{}".format(coefficient1, x, power, random.choice(addsub), coefficient2, x, power,
+                                              random.choice(addsub), coefficient3, random.choice(muldiv), coefficient4, x, power, random.choice(operators), coefficient5)
 
+    layout1 = "{}*{}^{}{}{}".format(coefficient1, x, power, random.choice(operators), coefficient2)
+    layout2 = "{}*{}^{}{}{}".format(coefficient1, x, power, random.choice(operators), coefficient2)
 
+    layouts = [monomial, monomial2]
 
+    result = random.choice(layouts)
 
+    return result
 
+test = Diffs()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def linear_equation():
-
-#     operation = ['-', '+', '*', '/']
-#     equation = ""
-
-#     length = rd(3,5)
-#     used_x = True
-#     for i in range(length):
-        
-#         if i < (length - 1): 
-#             equation += str(rd(2,10)) + operation[rd(0,3)]
-
-#             if len(equation) >= 3 and used_x:
-#                 equation += 'x*'
-#                 used_x = False
-
-#         else: equation += str(rd(2,10))
-    
-#     return "function itself: ", equation, " simplified: ", sp.simplify(equation, doit = False)
-
-
-
-
-
-
+print(test)
+print(sympify(test))

@@ -28,16 +28,14 @@ def Newton_Method(input_function: str, first_guess: int, number_of_iterations: i
         return "Please change your first guess. Perhaps, the method came across with vertex or new x_i are diverging instead of converging."
 
 #Done by Aisha
-def Differentiating_Calculator(function: str):
+def Differentiating_Calculator(function: str) -> str:
 
     function = function.replace('e', 'E')
     function = sympify(function) #this is input (be careful with writing the power of exp, because here we dont use usal (**) but just take in breakets 
     function_prime = function.diff(x)  
     function = lambdify(x, function) #idetifiying respect to which variable we are taking variable
     #print in the space (f_prime) it will give the answer
-    return function
-
-
+    return str(function_prime)
 
 ########################################################################################################################
 # done by

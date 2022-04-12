@@ -9,22 +9,17 @@ x = sp.Symbol('x')
 
 
 # s = "1/(1+e^x)"
+def Diffs():
 
+    trig_func = ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'arcsinh', 'arccosh', 'arctanh']
+
+    pass 
 # s = sp.simplify(s)
 # # print(s)
 
 # a = sp.integrate(s,x)
 
 # print(a)
-
-
-
-def Diffs():
-
-    trig_func = ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'arcsinh', 'arccosh', 'arctanh']
-
-    pass 
-
 
 
 

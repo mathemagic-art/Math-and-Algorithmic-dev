@@ -24,7 +24,7 @@ import math
 
 def rectangle_Method(function:str, init_point:int, end_point:int, num_of_interval:int)->str:
   x = sym.symbols('x')
-  function = sym.lambdify(x, func)
+  function = sym.lambdify(x, function)
   dx = (end_point - init_point)/num_of_interval
   total = 0.0
   for i in range (num_of_interval):
@@ -32,7 +32,8 @@ def rectangle_Method(function:str, init_point:int, end_point:int, num_of_interva
   Area = dx*total
   return str(Area) 
 
-
+a = rectangle_Method("x^2", 0, 2, 100)
+print(a)
 # rectangle_Method(function, init_point, end_point, num_of_interval)
 
 def rectangle_method_graph(function, init_point, end_point, num_of_interval):
@@ -48,4 +49,3 @@ def rectangle_method_graph(function, init_point, end_point, num_of_interval):
         plt.fill_between(init_point,end_point, edgecolor='black')
         plt.savefig('Rectangle_Method_Graph.png')
         
-rectangle_method_graph(function, init_point, end_point, num_of_interval)

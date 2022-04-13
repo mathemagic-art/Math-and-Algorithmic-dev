@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 # init_point = int(input('Enter the start of the interval: '))
 # end_point = int(input('Enter the end of the interval: '))
 
+
 def Simpsons_method(function:str, init_point:int, end_point:int)->str:
     def find_polynomial(x1, x2, x3, y1, y2, y3):
         a = (x1*(y3-y2) + x2*(y1-y3) + x3*(y2-y1))/((x1-x2)*(x1-x3)*(x2-x3))

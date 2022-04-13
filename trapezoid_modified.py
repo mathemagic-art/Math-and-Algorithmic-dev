@@ -21,6 +21,7 @@ x = sym.symbols('x')
 # end_point = int(input("Enter ending point: "))
 # n = int(input("Number of intervals: "))
 def Trapezoid(function:str,initial_point:int,end_point:int,n:int) ->str:
+    
   function = sym.lambdify(x, func)
   dx = (end_point - initial_point)/n
 

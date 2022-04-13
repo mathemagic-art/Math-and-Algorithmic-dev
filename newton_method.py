@@ -5,7 +5,7 @@ import warnings
 warnings.filterwarnings("error")
 warnings.filterwarnings("ignore", category=UserWarning)
 
-def Newton_Method(input_function, first_guess, number_of_iterations)
+def Newton_Method(input_function, first_guess, number_of_iterations):
     try:
         input_function = sympify(input_function.replace('e', 'E')) #replaces 
         f = lambdify(x, input_function) #lambdify expression of the input function

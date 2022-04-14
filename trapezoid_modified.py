@@ -8,28 +8,20 @@ Original file is located at
 """
 
 # Commented out IPython magic to ensure Python compatibility.
-import sympy as sym
-import numpy as np
-import matplotlib.pyplot as plt
-# %matplotlib inline
+from sympy import lambdify
 from sympy.abc import x
-from sympy import *
-x = sym.symbols('x')
 
-# func = input("Enter a Function: ")
-# initial_point = int(input("Enter starting point: "))
-# end_point = int(input("Enter ending point: "))
-# n = int(input("Number of intervals: "))
 def Trapezoid(function:str,initial_point:int,end_point:int,number_interval:int) ->str:
-  function = sym.lambdify(x, function)
+  function = lambdify(x, function)
   dx = (end_point - initial_point)/number_interval
-
   A = 1/2 *(function(initial_point) + function(end_point))
   for i in range(1, number_interval):
       A = A + function(initial_point + i*dx)
   Area = dx * A
   return str(Area)
-# Trapezoid("cos(x)",0,2,8)
+
+
+
 
 # def Trapezoid_graph(function,initial_point,end_point,number_interval):
 #     X = np.linspace(initial_point,end_point,100)
@@ -47,5 +39,3 @@ def Trapezoid(function:str,initial_point:int,end_point:int,number_interval:int) 
 
 #     plt.title('Area under the curve, Trapezoid method')
 #     plt.savefig('image.png')
-
-# Trapezoid_graph("cos(x)",0,2,8)

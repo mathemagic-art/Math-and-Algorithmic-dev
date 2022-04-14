@@ -11,8 +11,6 @@ def Trapezoid(function:str,initial_point:int,end_point:int,number_interval:int) 
   return str(Area)
 
 
-
-
 # def Trapezoid_graph(function,initial_point,end_point,number_interval):
 #     X = np.linspace(initial_point,end_point,100)
 #     x = np.linspace(initial_point,end_point,number_interval+1)

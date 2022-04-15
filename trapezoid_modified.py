@@ -22,7 +22,7 @@ x = sym.symbols('x')
 # n = int(input("Number of intervals: "))
 def Trapezoid(function:str,initial_point:int,end_point:int,n:int) ->str:
     
-  function = sym.lambdify(x, func)
+  function = sym.lambdify(x, function)
   dx = (end_point - initial_point)/n
 
   A = 1/2 *(function(initial_point) + function(end_point))
@@ -33,19 +33,22 @@ def Trapezoid(function:str,initial_point:int,end_point:int,n:int) ->str:
   return str(Area)
 
 # Trapezoid(function, initial_point, end_point, n)
+a = Trapezoid("x**2", 0, 3.14, 10)
 
-def Trapezoid_graph(function,initial_point,end_point,n):
-    X = np.linspace(initial_point,end_point,100)
-    x = np.linspace(initial_point,end_point,n+1)
-    Y = function(X)
-    plt.figure(figsize = (15,10))
-    plt.plot(X,Y, color='black', linewidth=2, markersize=50)
+print(a)
 
-    for i in range(n):
-        initial_point = [x[i],x[i],x[i+1],x[i+1]]
-        end_point = [0,function(x[i]),function(x[i+1]),0]
-        plt.fill(initial_point,end_point,'lightblue', edgecolor='black',alpha=1)
+# def Trapezoid_graph(function,initial_point,end_point,n):
+#     X = np.linspace(initial_point,end_point,100)
+#     x = np.linspace(initial_point,end_point,n+1)
+#     Y = function(X)
+#     plt.figure(figsize = (15,10))
+#     plt.plot(X,Y, color='black', linewidth=2, markersize=50)
 
-    plt.title('Area under the curve, Trapezoid method')
-    plt.savefig('image.png')
-Trapezoid_graph(function,initial_point,end_point,n)
+#     for i in range(n):
+#         initial_point = [x[i],x[i],x[i+1],x[i+1]]
+#         end_point = [0,function(x[i]),function(x[i+1]),0]
+#         plt.fill(initial_point,end_point,'lightblue', edgecolor='black',alpha=1)
+
+#     plt.title('Area under the curve, Trapezoid method')
+#     plt.savefig('image.png')
+# Trapezoid_graph(function,initial_point,end_point,n)

@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 # %matplotlib inline
 import numpy as np
 from sympy.plotting import plot
-function = input("Please enter the function: ")
-function = function.replace('e', 'E')
-n = int(input("Please enter the number of terms for expansion: "))
-c = float(input("Please enter the centre: "))
+# function = input("Please enter the function: ")
+# function = function.replace('e', 'E')
+# n = int(input("Please enter the number of terms for expansion: "))
+# c = float(input("Please enter the centre: "))
 def taylor(function,n,c):
   taylorPolynomial = str(sym.lambdify(x, function)(c))
   for i in range(1, n):
@@ -25,4 +25,12 @@ def taylor(function,n,c):
       taylorPolynomial += '+' + diff +'/'+str(factorial(i))+'*(x-{})**{}'.format(c, i)
   taylorPolynomial = sym.sympify(taylorPolynomial, rational=True)
   return taylorPolynomial
-taylor(function,n, c)
+  
+# taylor(function,n, c)
+
+
+
+a = taylor("cos(x)", 5, 0)
+
+
+print(a)

@@ -42,7 +42,6 @@ def Differentiating_Calculator(function: str) -> str:
 
 def rectangle_method(function:str, init_point:int, end_point:int, num_of_interval:int)->str:
   
-    x = sp.symbols('x')
     function = sp.lambdify(x, function)
     dx = (end_point - init_point)/num_of_interval
     total = 0.0

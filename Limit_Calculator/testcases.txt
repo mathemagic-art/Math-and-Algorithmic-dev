@@ -1,0 +1,33 @@
+input:
+
+print(limit_calculator("(cos(x)-1)/x", 'x', '0'))
+
+output: 0 
+
+
+input:
+
+print(limit_calculator("(x^2)/e^x", 'x', "oo"))
+
+output: 0
+
+
+input:
+
+print(limit_calculator("sin(x)/x", 'x', '0'))
+
+output: 1
+
+
+input:
+
+print(limit_calculator("1/x", 'x', '0+'))
+
+output: ∞
+
+
+input:
+
+print(limit_calculator("1/x", 'x', '0-'))
+
+output: -∞

@@ -28,7 +28,7 @@ def genDifferentiationProblem(diff_lvl=2):
 
     if diff_lvl == 3:
         coeff1 = random.randint(1, 5)
-        func_type = random.choices(list(types.keys()), weights=(1, 3, 5))[0]
+        func_type = random.choices(list(types.keys()), weights=(1, 3, 1))[0]
         func = random.choice(types[func_type])
         if func == 'e':
             problem += "{}^{}*x+{}".format(func, coeff1, genDifferentiationProblem(1))
@@ -46,6 +46,4 @@ def genDifferentiationProblem(diff_lvl=2):
 
     return sympify(problem)
 
-
-
-print(genDifferentiationProblem(5))
+print(genDifferentiationProblem(2))

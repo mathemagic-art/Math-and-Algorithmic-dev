@@ -1,5 +1,5 @@
 import random
-from sympy import simplify
+from sympy import sympify
 
 
 def genDifferentiationProblem(diff_lvl=2):
@@ -9,7 +9,7 @@ def genDifferentiationProblem(diff_lvl=2):
     types = {
         'Logarithmic': ['ln'],
         'Trigonometric': ['sin', 'cos', 'tan', 'cot', 'sec'],
-        'Exponential': ['exp']
+        'Exponential': ['e']
     }
     power = random.randint(2, 5)
 
@@ -28,9 +28,12 @@ def genDifferentiationProblem(diff_lvl=2):
 
     if diff_lvl == 3:
         coeff1 = random.randint(1, 5)
-        func_type = random.choices(list(types.keys()), weights=(1, 4, 1))[0]
+        func_type = random.choices(list(types.keys()), weights=(1, 3, 5))[0]
         func = random.choice(types[func_type])
-        problem += "{}*{}(x)+{}".format(coeff1, func, genDifferentiationProblem(1))
+        if func == 'e':
+            problem += "{}^{}*x+{}".format(func, coeff1, genDifferentiationProblem(1))
+        else:
+            problem += "{}*{}(x)+{}".format(coeff1, func, genDifferentiationProblem(1))
 
     if diff_lvl == 4:
         func_type = random.choices(list(types.keys()), weights=(2, 4, 2))[0]
@@ -41,7 +44,8 @@ def genDifferentiationProblem(diff_lvl=2):
         operator = random.choice(('/', '*'))
         problem = "({}){}({})".format(genDifferentiationProblem(2), operator, genDifferentiationProblem(3))
 
-    return simplify(problem)
+    return sympify(problem)
+
 
 
 print(genDifferentiationProblem(5))

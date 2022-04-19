@@ -13,5 +13,3 @@ def definite_integration_calculator(function, lower_bound, upper_bound):
   a = lambdify(x, integrate(sympify(function))) #integrating and lammbdifying a given function
   return outputFunc("{:.5f}".format((upper_bound)-a(lower_bound)))
 
-
-print(definite_integration_calculator('1/x', 3, 6))

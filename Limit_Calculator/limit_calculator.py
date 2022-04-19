@@ -1,25 +1,31 @@
-import sympy as sp
+from sympy import sympify, Symbol, limit
+import sys 
+sys.path.append('parse_and_output')
+from parse_and_output import parseFunc, outputFunc
 
-
-def limit_calculator(function: str, symbol : str, limit: str) -> str:
+def limit_calculator(function: str, symbol : str, approach: str) -> str:
     
-    symbol = sp.Symbol(symbol)
-    function = sp.sympify(function.replace('e', 'E'))
+    symbol = Symbol(symbol)
+    function = parseFunc(function)
     
-    if limit[-1] in ['+', '-']:        
-        sign = limit[-1]
-        limit = int(limit[:-1])
-        ans = str(sp.limit(function, symbol, limit, sign))
+    if approach[-1] in ['+', '-']:        
+        sign = approach[-1]
+        approach = int(approach[:-1])
+        ans = str("{:.5f}".format(sympify(limit(function, symbol, approach)).evalf()))
     else:
-        if limit.isdigit():
-            limit = int(limit)
-        ans = str(sp.limit(function, symbol, limit))
+        if approach.isdigit():
+            approach = int(approach)
+        ans = str("{:.5f}".format(sympify(limit(function, symbol, approach)).evalf()))
     
     
     return ans
 
 # ./testcases.txt there are some inputs use them
 # print(limit_calculator("1/x", 'x', '0+'))
+print(limit_calculator("e^x", 'x', '34'))
+
+
+
     
 
 

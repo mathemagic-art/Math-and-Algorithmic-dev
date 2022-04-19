@@ -25,41 +25,40 @@ def question_generator(limit_level: int,x: str,limit:int)->str:
 
     if limit_level == 1:
         coeff1 = random.randint(2, 10)
-        question += "{}*x^{}".format(coeff1, power)
+        coeff2 = random.randint(2, 10)
+        power2 = random.randint(2, 4)
+        question += "{}*x^{}+{}*x^{}".format(coeff1,power, coeff2, power2)
 
     if limit_level == 2:
         coeff1 = random.randint(2, 10)
         coeff2 = random.randint(2, 10)
-        coeff3 = random.randint(2, 10)
         power2 = random.randint(2, 4)
+        coeff3 = random.randint(2, 10)
         power3 = random.randint(1, 3)
 
-        question += "{}*x^{}+{}*x^{}+{}*x^{}".format(coeff1, power, coeff2, power2, coeff3, power3)
+        question += "{}*x^{}+{}/x^{}+{}*x^{}".format(coeff1, power, coeff2, power2, coeff3, power3)
 
-    if limit_level == 3:
-        coeff1 = random.randint(1, 5)
-        function_type = random.choices(list(types.keys()), weights=(1, 4, 1))[0]
-        function = random.choice(types[function_type])
-        question += "{}*{}(x)+{}".format(coeff1, function, question_generator(1,x,limit))
+#     if limit_level == 3:
+#         coeff1 = random.randint(1, 5)
+#         function_type = random.choices(list(types.keys()), weights=(1, 4, 1))[0]
+#         function = random.choice(types[function_type])
+#         question += "{}*{}(x)+{}".format(coeff1, function, question_generator(1,x,limit))
 
-    if limit_level == 4:
-        function_type = random.choices(list(types.keys()), weights=(2, 4, 2))[0]
-        function = random.choice(types[function_type])
-        question += "{}({})".format(function, question_generator(1,x,limit))
+#     if limit_level == 4:
+#         function_type = random.choices(list(types.keys()), weights=(2, 4, 2))[0]
+#         function = random.choice(types[function_type])
+#         question += "{}({})".format(function, question_generator(1,x,limit))
 
-    if limit_level == 5:
-        operator = random.choice(('/', '*'))
-        question = "({}){}({})".format(question_generator(2,x,limit), operator, question_generator(3,x,limit))
+#     if limit_level == 5:
+#         operator = random.choice(('/', '*'))
+#         question = "({}){}({})".format(question_generator(2,x,limit), operator, question_generator(3,x,limit))
 
     return str(simplify(question))
 
-func=question_generator(2,x,oo)
+func=question_generator(2,x,2)
 
 print(func)
 def limit_generator():
   return limit(func,x,oo)
 
 print(limit_generator())
-
-
-

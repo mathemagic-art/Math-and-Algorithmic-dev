@@ -31,3 +31,17 @@ input:
 print(limit_calculator("1/x", 'x', '0-'))
 
 output: -∞
+
+
+input: 
+
+print(limit_calculator("(1+x)^(1/x)", "x", "0"))
+
+output: E
+
+
+input: 
+
+print(limit_calculator("(3*x+1)/(3*x^2+1)^(1/2)", 'x', 'oo'))
+
+output: sqrt(3)

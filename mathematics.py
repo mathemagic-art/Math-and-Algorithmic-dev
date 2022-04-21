@@ -63,17 +63,19 @@ def definite_integration_calculator(function:str, lower_bound:str, upper_bound:s
 
 #########################################################################################################################
 # done by Elnazar
+
 def limit_calculator(function: str, symbol : str, approach: str) -> str:
     function = parse_func(function)    
     if approach[-1] in ['+', '-']:        
         sign = approach[-1]
         approach = int(approach[:-1])
-        ans = str("{:.5f}".format(sp.sympify(sp.limit(function, symbol, approach)).evalf()))
+        ans = str(sp.sympify(sp.limit(function, symbol, approach, sign)))
+    elif approach == 'oo': ans = str(sp.sympify(sp.limit(function, symbol, approach)))
     else:
-        if approach.isdigit():
-            approach = int(approach)
-        ans = str("{:.5f}".format(sp.sympify(sp.limit(function, symbol, approach)).evalf()))    
-    return ans
+        approach = int(approach)
+        ans = str(sp.sympify(sp.limit(function, symbol, approach)))
+    return ans.replace('E', 'e')
+
 
 ########################################################################################################################
 # done by Tariq

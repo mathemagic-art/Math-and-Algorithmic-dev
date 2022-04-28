@@ -1,117 +1,146 @@
 import re
-import sympy as sp 
-import numpy as np
-import math
+from re import search, findall
+from math import factorial
+from numpy import linspace, random
+from sympy import Symbol, sympify, lambdify, diff, Float, limit, integrate, calculus, S
+from scipy import integrate as scipy_integrate
 import warnings
-import scipy.integrate
 warnings.filterwarnings("error")
 warnings.filterwarnings("ignore", category=UserWarning)
-x = sp.Symbol('x')
+x = Symbol('x')
 
 ########################################################################################################################
 # parsing and output functions 
  
 def parse_func(function: str):
-    return sp.sympify(function.replace('e', 'E'), convert_xor=True)
 
-def output_func(function):
+    return sympify(function.replace('e', 'E'), convert_xor=True)
+
+def output_func(function: str) -> str:
     function = str(function).replace('log', 'ln')
-    while re.search('ln\((.*?)\)/ln\((.*?)\)', function) != None:
-        expression = re.search('ln\((.*?)\)/ln\((.*?)\)', function).string
-        ind_of_ln_expr = list(re.search('ln\((.*?)\)/ln\((.*?)\)', function).span())
-        limit_base, limit_expr = re.findall('ln\((.*?)\)', expression)
+    function = function.replace('E', 'e')
+    while search('exp\((.*?)\)', function) != None:
+        expression = search('exp\((.*?)\)', function).string
+        ind_of_ln_expr = list(search('exp\((.*?)\)', function).span())
+        ins_exp = findall('exp\((.*?)\)', expression)[0]
+        function = function[:ind_of_ln_expr[0]] + "e**({})".format(ins_exp) + function[ind_of_ln_expr[1]:]
+    while search('ln\((.*?)\)/ln\((.*?)\)', function) != None:
+        expression = search('ln\((.*?)\)/ln\((.*?)\)', function).string
+        ind_of_ln_expr = list(search('ln\((.*?)\)/ln\((.*?)\)', function).span())
+        limit_base, limit_expr = findall('ln\((.*?)\)', expression)
         function = function[:ind_of_ln_expr[0]] + "log({},{})".format(limit_base, limit_expr) + function[ind_of_ln_expr[1]:]
     return function
 
 ########################################################################################################################
-# done by Shokhrukh
 
-def newton_method(input_function: str, first_guess: int, number_of_iterations: int) -> str:
+def newton_method(function: str, variable: str, number_of_iterations: int) -> str:
+
+    number_of_iterations = int(number_of_iterations)
     try:
-        input_function = parse_func(input_function) #replaces 
-        f = sp.lambdify(x, input_function) #lambdify expression of the input function
-        f_d = sp.lambdify(x, sp.diff(input_function, x))  #lambdify expression of the derivative of the input function
-        x_i = first_guess
-        for i in range(number_of_iterations):
-            x_i = x_i - (f(x_i)/f_d(x_i))
-        if f(x_i) > 0.000001:
-            return "It seems that you put unsufficient number of iterations. Please make it bigger. Also, check the function. Probably, it does not have any roots."
+        function = parse_func(function)
+        variable = Symbol(variable)
+        f = lambdify(variable, function) #lambdify expression of the input function
+        f_d = lambdify(variable, diff(function, variable))  #lambdify expression of the derivative of the input function
+        interval = re.findall('Interval.*?\(.*?\)',  str(calculus.util.continuous_domain(function, variable, S.Reals))) #checking the domain
+        if interval: 
+            interval = interval[0]
+            interval = re.findall('\(.*?\)', interval)[0][1:-1].split(',')
+            if interval[0] == '-oo':
+                x_i = int(interval[1]) - 1
+            elif interval[1] == 'oo':
+                x_i = int(interval[0]) + 1
+            else:
+                x_i = int(interval[0]) + (int(interval[1]) - int(interval[0]))/2
         else:
-            return str(x_i)
+            x_i = random.randint(1, 10)
+        for i in range(int(number_of_iterations)):
+            x_i = x_i - (f(x_i)/f_d(x_i))
+        ret = str(Float(x_i).round(4))
+        if '.0000' in ret:
+            ret = ret[:ret.index('.')]
+        return ret
     except RuntimeWarning:
-        return "Please change your first guess. Perhaps, the method came across with vertex or new x_i are diverging instead of converging."
+        return "Something went wrong. Please check the criteria."
 ########################################################################################################################
-#Done by Aisha
 
-def differentiating_calculator(function: str) -> str:
+def differentiating_calculator(function: str, variable: str, degree: int) -> str:
+    
+    degree = int(degree)
 
     function = parse_func(function)
-    function_prime = function.diff(x)  
-    return output_func(function_prime)
+    variable = Symbol(variable)
+    function_prime = function.diff(variable, degree)  
+    ans = output_func(function_prime)
+    return ans
+########################################################################################################################
+
+def indefinite_integration_calculator(function: str, variable: str) -> str:
+    
+    variable = Symbol(variable)
+    function = parse_func(function)
+    ans = lambdify(variable, integrate(sympify(function)))
+
+    return output_func(ans)
 
 ########################################################################################################################
-# done by Aisha
-def indefinite_integration_calculator(function: str) -> str:
-  return output_func(sp.integrate(parse_func(function)))
 
+def definite_integration_calculator(function: str, initial_point: float, end_point: float) -> str:
+    
+    initial_point = float(initial_point)
+    end_point = float(end_point)
 
-def definite_integration_calculator(function:str, lower_bound:str, upper_bound:str) -> str:
-  function = parse_func(function)
-  a = sp.lambdify(x, sp.integrate(sp.sympify(function))) #integrating and lammbdifying a given function
-  return output_func("{:.5f}".format(a(int(upper_bound))-a(int(lower_bound))))
-
+    function = parse_func(function)
+    a = lambdify(x, integrate(sympify(function))) 
+    return output_func("{:.5f}".format(a(end_point)-a(initial_point)))
 
 #########################################################################################################################
-# done by Elnazar
-
-def limit_calculator(function: str, symbol : str, approach: str) -> str:
-    function = parse_func(function)    
-    if approach[-1] in ['+', '-']:        
-        sign = approach[-1]
-        approach = int(approach[:-1])
-        ans = str(sp.sympify(sp.limit(function, symbol, approach, sign)))
-    elif approach == 'oo': ans = str(sp.sympify(sp.limit(function, symbol, approach)))
-    else:
-        approach = int(approach)
-        ans = str(sp.sympify(sp.limit(function, symbol, approach)))
-    return ans.replace('E', 'e')
 
 
-########################################################################################################################
-# done by Tariq
-
-def rectangle_method(function:str, init_point:int, end_point:int, num_of_interval:int)->str:
+def limit_calculator(function: str, variable : str, sign: str, approach: str) -> str:
+    
+    variable = Symbol(variable)
     function = parse_func(function)
-    function = sp.lambdify(x, function)
-    dx = (end_point - init_point)/num_of_interval
+    
+    if len(sign) == 1:        
+
+        ans = str(sympify(limit(function, variable, approach, sign)).evalf())
+        if 'oo' in ans:
+            return ans
+        else:
+            return '{:.5f}'.format(float(ans))
+    else:
+        ans = str(sympify(limit(function, variable, approach)).evalf())
+        if 'oo' in ans:
+            return ans
+        else:
+            return '{:.5f}'.format(float(ans))
+            
+########################################################################################################################
+
+def rectangle_method(function:str, initial_point: float, end_point: float, number_of_intervals: int) -> str:
+
+    initial_point = float(initial_point)
+    end_point = float(end_point)
+    number_of_intervals = int(number_of_intervals)
+
+    function = parse_func(function)
+    function = lambdify(x, function)
+    dx = (end_point - initial_point)/number_of_intervals
     total = 0.0
 
-    for i in range (num_of_interval):
-        total = total + function((init_point + (i*dx)))
+    for i in range (number_of_intervals):
+        total = total + function((initial_point + (i*dx)))
 
     area = dx*total
 
     return "{:.5f}".format(area)
 
-# def Rectangle_method_graph(function:str, init_point:int, end_point:int, num_of_interval:int):
+#######################################################################################################################
 
-#     X = np.linspace(init_point,end_point,100)
-#     x = np.linspace(init_point,end_point,num_of_interval+1)
-#     Y = function(X)
-#     plt.figure(figsize = (15,10))
-#     plt.plot(X,Y, color='black', linewidth=2, markersize=50)
+def simpsons_method(function: str, initial_point: float, end_point: float) -> str:
 
-#     for i in range(num_of_interval):
-#         init_point = [x[i],x[i],x[i+1],x[i+1]]
-#         end_point = [0,function(x[i]),function(x[i]),0]
-#         plt.fill_between(init_point,end_point, edgecolor='black')
-#         plt.savefig('Rectangle_Method_Graph.png')
-
-
-########################################################################################################################
-# Zakir and Tariq
-
-def simpsons_method(function: str, initial_point: int, end_point: int)-> str:
+    initial_point = float(initial_point)
+    end_point = float(end_point)
 
     def find_polynomial(x1, x2, x3, y1, y2, y3):
      
@@ -119,16 +148,16 @@ def simpsons_method(function: str, initial_point: int, end_point: int)-> str:
         b = ((y2-y1)/(x2-x1)) - a*(x1+x2) 
         c = y1 - a*x1**2 - b*x1
      
-        return sp.lambdify(x, sp.sympify('{}*x**2 + {}*x + {}'.format(a, b, c)))
+        return lambdify(x, sympify('{}*x**2 + {}*x + {}'.format(a, b, c)))
     
-    n = np.random.randint(5, 50)
+    n = random.randint(5, 50)
     function = parse_func(function)
-    function = sp.lambdify(x, function)
+    function = lambdify(x, function)
     
     if n % 2 != 0:
         n += 1
     
-    x_values = np.linspace(initial_point, end_point, n+1)
+    x_values = linspace(initial_point, end_point, n+1)
     dx = (end_point-initial_point)/n
     Area = 0
     
@@ -136,36 +165,47 @@ def simpsons_method(function: str, initial_point: int, end_point: int)-> str:
         
         x_1, x_2, x_3 = x_values[i], x_values[i+1], x_values[i+2] 
         pol_func = find_polynomial(x_1, x_2, x_3, function(x_1), function(x_2), function(x_3))
-        Area += scipy.integrate.quad(pol_func ,x_1, x_3)[0]
+        Area += scipy_integrate.quad(pol_func ,x_1, x_3)[0]
         
     return "{:.5f}".format(Area)   
 
 ######################################################################################################################
-# done by Zakir
 
+def trapezoid_method(function: str, initial_point: float, end_point: float, number_of_intervals: int) -> str:
 
-def trapezoid_method(function:str,initial_point:int,end_point:int,number_interval:int) ->str:
-  function = sp.lambdify(x, function)
-  dx = (end_point - initial_point)/number_interval
-  A = 1/2 *(function(initial_point) + function(end_point))
-  for i in range(1, number_interval):
-      A = A + function(initial_point + i*dx)
-  Area = dx * A
-  return "{:.5f}".format(Area)
+    initial_point = float(initial_point)
+    end_point = float(end_point)
+    number_of_intervals = int(number_of_intervals)
 
+    function = lambdify(x, function)
+    dx = (end_point - initial_point)/number_of_intervals
+    A = 1/2 *(function(initial_point) + function(end_point))
+    for i in range(1, number_of_intervals):
+        A = A + function(initial_point + i*dx)
+    Area = dx * A
+    return "{:.5f}".format(Area)
 
 ########################################################################################################################
-# done by Attiullah
 
-def taylor_series(function, num_of_iter, center) -> str:
-    
+def taylor_series(function:str, variable: str, number_of_iterations: int, center: float) -> str:
+
+    number_of_iterations = int(number_of_iterations)
+    center = float(center)
+
     function = parse_func(function)
-    taylorPolynomial = str(sp.lambdify(x, function)(center))
-    
-    for i in range(1, num_of_iter):
-        f_diff = str(sp.lambdify(x, sp.diff(function, x, i))(center))
-        taylorPolynomial += '+' + f_diff +'/'+str(math.factorial(i))+'*(x-{})**{}'.format(center, i)
-    
-    taylorPolynomial = sp.sympify(taylorPolynomial, rational=True)
-    
+    variable = Symbol(variable)
+
+    if center == 0:
+        taylorPolynomial = str(lambdify(variable, function)(center))
+        for i in range(1, number_of_iterations):
+            f_diff = str(lambdify(variable, diff(function, variable, i))(center))
+            taylorPolynomial += '+' + f_diff +'/'+str(factorial(i))+'*({}-{})**{}'.format(variable, center, i)    
+        taylorPolynomial = sympify(taylorPolynomial, rational=True)
+    else:
+        taylorPolynomial = str(function.subs(variable, center))
+        for i in range(1, number_of_iterations):
+            f_diff = diff(function, variable, i)
+            f_diff = str(f_diff.subs(variable, center))
+            taylorPolynomial += '+' + f_diff +'/'+str(factorial(i))+'*({}-{})**{}'.format(variable, center, i)    
+        taylorPolynomial = sympify(taylorPolynomial, rational=True)
     return output_func(taylorPolynomial)

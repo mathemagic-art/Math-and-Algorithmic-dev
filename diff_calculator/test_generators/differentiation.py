@@ -16,14 +16,14 @@ def generateDifferentiation(level=2):
 
     # layouts
     def polynomial():
-        coeff = random.randint(1, 5)
+        coeff = random.randint(2, 5)
         power = random.randint(2, 5)
         problem = "{}*x**{}".format(coeff, power)
         return problem
 
     def trigonometric():
-        coeff_1 = random.randint(1, 5)
-        coeff_2 = random.randint(1, 5)
+        coeff_1 = random.randint(2, 5)
+        coeff_2 = random.randint(2, 5)
         func_type = list(types.keys())[0]
         func = random.choice(types[func_type])
         problem = "({}*{}*({}*x))".format(coeff_1, func, coeff_2)
@@ -39,21 +39,17 @@ def generateDifferentiation(level=2):
                                        random_operator, trigonometric())
 
     if level == 3:
-        coeff_1 = random.randint(1, 5)
-        coeff_2 = random.randint(1, 5)
-        coeff_3 = random.randint(1, 5)
-        power_1 = random.randint(1, 5)
+        coeff_1 = random.randint(2, 5)
+        coeff_2 = random.randint(2, 5)
+        power_1 = random.randint(2, 5)
         func_type = random.choice(list(types.keys())[1:])
         func = types[func_type][0]
 
         if func == 'e':
-            problem += "{}*{}**({}*x**{}{}{})".format(
-                polynomial(), func, coeff_2, power_1, random_operator, coeff_3)
+            problem += "{}*{}**({}*x**{})".format(
+                polynomial(), func, coeff_2, power_1)
         else:
             problem += "{}*{}*({}){}{}".format(
                 coeff_1, func, polynomial(), random_operator, trigonometric())
 
     return problem
-
-
-print(generateDifferentiation(3))

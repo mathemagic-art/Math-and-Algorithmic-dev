@@ -2,48 +2,58 @@ import random
 from sympy import sympify
 
 
-def genDifferentiationProblem(diff_lvl=2):
+def generateDifferentiation(level=2):
 
     # dependencies
     problem = ''
     types = {
-        'Logarithmic': ['ln'],
         'Trigonometric': ['sin', 'cos', 'tan', 'cot', 'sec'],
-        'Exponential': ['e']
+        'Exponential': ['e'],
+        'Logarithmic': ['ln']
     }
-    power = random.randint(2, 5)
+    operators = ["+", "-", "*", "/"]
+    random_operator = random.choice(operators)
 
-    if diff_lvl == 1:
-        coeff1 = random.randint(2, 10)
-        problem += "{}*x^{}".format(coeff1, power)
+    # layouts
+    def polynomial():
+        coeff = random.randint(1, 5)
+        power = random.randint(2, 5)
+        problem = "{}*x**{}".format(coeff, power)
+        return problem
 
-    if diff_lvl == 2:
-        coeff1 = random.randint(2, 10)
-        coeff2 = random.randint(2, 10)
-        coeff3 = random.randint(2, 10)
-        power2 = random.randint(2, 4)
-        power3 = random.randint(1, 3)
-
-        problem += "{}*x^{}+{}*x^{}+{}*x^{}".format(coeff1, power, coeff2, power2, coeff3, power3)
-
-    if diff_lvl == 3:
-        coeff1 = random.randint(1, 5)
-        func_type = random.choices(list(types.keys()), weights=(1, 3, 1))[0]
+    def trigonometric():
+        coeff_1 = random.randint(1, 5)
+        coeff_2 = random.randint(1, 5)
+        func_type = list(types.keys())[0]
         func = random.choice(types[func_type])
+        problem = "({}*{}*({}*x))".format(coeff_1, func, coeff_2)
+        return problem
+
+    # logic
+    if level == 1:
+        problem += "({}){}({})".format(polynomial(),
+                                       random_operator, polynomial())
+
+    if level == 2:
+        problem += "({}){}({})".format(trigonometric(),
+                                       random_operator, trigonometric())
+
+    if level == 3:
+        coeff_1 = random.randint(1, 5)
+        coeff_2 = random.randint(1, 5)
+        coeff_3 = random.randint(1, 5)
+        power_1 = random.randint(1, 5)
+        func_type = random.choice(list(types.keys())[1:])
+        func = types[func_type][0]
+
         if func == 'e':
-            problem += "{}^{}*x+{}".format(func, coeff1, genDifferentiationProblem(1))
+            problem += "{}*{}**({}*x**{}{}{})".format(
+                polynomial(), func, coeff_2, power_1, random_operator, coeff_3)
         else:
-            problem += "{}*{}(x)+{}".format(coeff1, func, genDifferentiationProblem(1))
+            problem += "{}*{}*({}){}{}".format(
+                coeff_1, func, polynomial(), random_operator, trigonometric())
 
-    if diff_lvl == 4:
-        func_type = random.choices(list(types.keys()), weights=(2, 4, 2))[0]
-        func = random.choice(types[func_type])
-        problem += "{}({})".format(func, genDifferentiationProblem(1))
+    return problem
 
-    if diff_lvl == 5:
-        operator = random.choice(('/', '*'))
-        problem = "({}){}({})".format(genDifferentiationProblem(2), operator, genDifferentiationProblem(3))
 
-    return sympify(problem)
-
-print(genDifferentiationProblem(2))
+print(generateDifferentiation(3))
